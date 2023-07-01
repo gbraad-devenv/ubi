@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 ghcr.io/gbraad-devenv/ubi/base:9
+FROM --platform=linux/amd64 ghcr.io/gbraad-devenv/ubi/dotfiles:9
 
 USER root
 
