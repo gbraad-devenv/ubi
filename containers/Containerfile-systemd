@@ -1,4 +1,4 @@
-FROM ghcr.io/gbraad-devenv/ubi/base:9
+FROM ghcr.io/gbraad-devenv/ubi/dotfiles:9
 
 USER root
 
