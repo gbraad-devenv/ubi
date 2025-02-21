@@ -10,6 +10,9 @@ ARG USERHOME="${HOMEBASE}/${USER}"
 ARG ROOTHOME="/root"
 ARG ARCH="x86_64"
 
+# fix issue with sudo and SSH
+RUN chmod 640 /etc/shadow
+
 RUN dnf install -y \
         git-core \
         sudo \
@@ -23,6 +26,8 @@ RUN dnf install -y \
         https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm \
     && dnf install -y \
         stow \
+    && dnf install -y \
+        https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/tmux-3.2a-5.el9.x86_64.rpm \
     && dnf clean all \
     && rm -rf /var/cache/yum
 
@@ -36,6 +41,7 @@ USER ${USER}
 
 RUN git clone https://github.com/gbraad-dotfiles/upstream.git ${USERHOME}/.dotfiles --depth 2 \
     && cd ${USERHOME}/.dotfiles \
+    && rm -f ${USERHOME}/.zshrc \
     && sh ./install.sh
 
 RUN mkdir -p ~/.ssh/ \
@@ -48,6 +54,10 @@ RUN git clone https://github.com/gbraad-dotfiles/upstream.git ${ROOTHOME}/.dotfi
     && . ./zsh/.zshrc.d/dotfiles.zsh \
     && stow config \
     && dotfiles restow
+
+# change default shell
+RUN chsh root -s /bin/zsh \
+    && chsh ${USER} -s /bin/zsh
 
 # ssh server
 RUN dnf install -y \
